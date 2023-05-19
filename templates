@@ -1,0 +1,222 @@
+--------- TeX: -----------------------------
+
+\input{../header.tex}
+
+\begin{document}
+    \pagenumbering{roman}
+
+    \vspace{2cm}
+    
+    \title{VXXX}
+    
+    \vspace{1cm}
+    
+    \author{
+        Luca Di Bella\\
+        \texorpdfstring{\href{mailto:luca.dibella@tu-dortmund.de}{luca.dibella@tu-dortmund.de}\and}{,}
+        Luca Fiedler\\
+        \texorpdfstring{\href{mailto:luca.fiedler@tu-dortmund.de}{luca.fiedler@tu-dortmund.de}}{}
+    }
+    
+    \vspace{1cm}
+    
+    \date{Durchführung: \\ Abgabe: \vspace{-4ex}}
+    
+    \maketitle
+    \thispagestyle{empty}
+    
+    \begin{center}
+        Versuchsgruppe: \textbf{3}
+    \end{center}
+    
+    \vfill
+    
+    \begin{center}
+        Technische Universität Dortmund\\
+        Fortgeschrittenenpraktikum Master Physik
+    \end{center}
+    
+    \newpage
+    \justifying
+    \tableofcontents
+    \newpage
+    \pagenumbering{arabic}
+    \clearpage
+    \setcounter{page}{1}
+
+% -- Zielsetzung -- %
+    \section*{Zielsetzung}
+    \addcontentsline{toc}{section}{Zielsetzung}
+%
+% -- Theorie -- %
+%
+    \section{Theorie}
+%
+% -- Aufbau -- %
+%
+    \section{Aufbau}
+%
+% -- Durchführung -- %
+%
+    \section{Durchführung}
+%
+% -- Auswertung -- %
+%
+    \section{Auswertung}
+        \subsection{}
+            \begin{table}[H]
+                \centering
+                \caption{}
+                \input{}
+                \label{}
+            \end{table}
+
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{}
+                \caption{}
+                \label{}
+            \end{figure}
+%
+% -- Diskussion -- %
+%
+    \section{Diskussion}
+
+\newpage
+\printbibliography
+\newpage
+\section*{Appendix}
+\addcontentsline{toc}{section}{Appendix}
+\end{document}
+
+--------- Python: --------------------------
+
+import pylab
+import matplotlib as mpl
+mpl.use('pgf')
+import matplotlib.pyplot as plt
+import numpy as np
+mpl.rcParams.update({
+    'font.family': 'serif',
+    'text.usetex': True,
+    'pgf.rcfonts': False,
+    'pgf.texsystem': 'lualatex',
+    'pgf.preamble':r'\usepackage{unicode-math}\usepackage{siunitx}\usepackage{xfrac}',
+})
+import uncertainties.unumpy as unp
+from uncertainties import ufloat
+from uncertainties.unumpy import (
+    nominal_values as noms,
+    std_devs as stds
+)
+from scipy import stats
+from scipy.stats import sem
+from scipy.optimize import curve_fit
+import scipy.constants as const
+
+def rf(W_ex, W_lit):
+    return noms(abs(((W_ex - W_lit)/W_lit)*100))
+
+def make_SI(num, unit, exp='', figures=None):
+    ''' Format an uncertainties ufloat as a \SI quantity '''
+    if np.any(stds([num])):
+        if figures is None:
+            figures = ''
+        x = '{0:.{1:}uf}'.format(num, figures).replace('/', '')
+    else:
+        x = '{0:.{1:}f}'.format(num, figures)
+
+    return r'\SI{{{}{}}}{{{}}}'.format(x, exp, unit)
+
+
+# Formeln ---------------------------------------
+
+
+# Literaturwerte ---------------------------------------  
+
+
+# Importierung Messdaten ------------------------------
+
+#X, Y, Z = np.genfromtxt('data.txt', unpack=True)
+
+
+# Berechnungen Messdaten/Literatur ------------------------------
+
+
+# Messwertetabelle für "AUFGABE" ---------------------------------------------------
+
+#tab_header = r'''
+#\begin{tabular}{S[table-format=X] }     %# X = Column Format, ex. 1.2
+#    \toprule
+#    {$"EINHEIT"$} & \\
+#    #\midrule
+#    #\cmidrule(lr{0.5em}){length}
+#
+#'''
+#
+#tab_footer = r'''    
+#    \bottomrule
+#\end{tabular}
+#'''
+#
+#_row_temp = r'         {X:Yf} & \\'     # X = Column No. from 0, Y = Column Format
+#
+#with open('build/table.tex', 'w') as a:
+#    a.write(tab_header)
+#    for row in zip(X,):
+#        a.write(_row_temp.format(*row).replace('nan',' ').replace('.',',') )
+#        a.write('\n')
+#    a.write(tab_footer)
+
+
+# Plot für "AUFGABE" ------------------------------------------
+
+# --- Lineare Regression ---
+#
+#par, covm = np.polyfit(x, y, deg=1, cov=True)
+#err = np.sqrt(np.diag(covm))
+#linplt = np.linspace("start", "end", "ticks")
+#plt.plot(
+#    linplt,
+#    par[0] * linplt + par[1],
+#    'r-',
+#    label='Lineare Regression',
+#)
+#m = ufloat(par[0],err[0])
+#b = ufloat(par[1],err[1])
+
+# --- Curve Fit ---
+#pop, pcov = curve_fit(
+#    f,
+#    x,
+#    y,
+#    sigma=None,
+#    absolute_sigma=True,
+#    p0=["STARTVALUE(S)"]
+#    )
+#
+#xplt = np.linspace("START","END")
+#
+#plt.plot(x, y, 'k.', label=r'')
+#
+#plt.legend(loc="best")
+#plt.xlabel(r'$$')
+#plt.ylabel(r'$$')
+#plt.grid()
+#plt.tight_layout()
+#plt.savefig('build/plot.pdf')
+#plt.close()
+
+
+# Korrektur für "AUFGABE" ------------------------------------------
+
+
+# Überprüfung Berechnungen ------------------------------------------
+
+#print('txt',val)
+#print()
+
+# Einheiten ------------------------------------------
+
+#with open('build/val.tex', 'w') as f:
+#    f.write(make_SI(val,r'\unit'))
