@@ -44,9 +44,21 @@
     Prominent targets of such measurements are gamma emitters such as super nova remnants such as the crab nebula and active galactic nuclei of various distant galaxies.
 
     \subsection{FACT}
-    Fact is operational since 2011 and is positioned at the Observatorio Roque de los Muchachos on the Canary island of La Palma.
+    Fact is operational since 2011 and is positioned at the Observatorio Roque de los Muchachos on the Canary island of La Palma.    
+    Similarly to other ground sationed gamma-ray telescopes, FACT measures the Cherenkov-light emitted by secondary particles in the atmosphere that emerge when the initial ray interacts with the atmosphere.
+    The amplitude of this light is dim compared to daylight and therefore observations can only be performed during nighttime.
+
     Since beginning of operation, the telescope has collectet data on the gamma-ray emissions of varoius point of interest and passed the data on to the computer analysis part of the observation.
-    
+    Here, the raw information from observations is converted into a more managable for further analysis.
+    Various calculations are performed, including the calibrations of each pixels current in the cameras detector, finding the mean time and intensity of the individual pixel.
+    Using these values, the background noise is removed from the pixels containing cherenkov light and the resulting shape in the camera view is used to determine the Hillas parameters including the estimated energy of the original ray.
+
+    \subsection{Simulated Data}
+    In the later steps of this analysis, reference data is required that will be used to form calculations on the detector response which represents the imperfect measurement of an event.
+    This process involves simulated data created with the CORSICA program by cumputing a digital representation of particles that are involved in the observation.
+    Then, the CERES software simulates how FACT would respont to these particles.
+    As the result of this method, samples of observations are given where the true properties of the initial particle are known.
+    Therefore, in the process of unfolding, data of real observations can be corrected. 
 %
 % -- Theorie -- %
 %
