@@ -63,12 +63,18 @@ Therefore, in the process of unfolding, data of real observations can be correct
     % -- Theorie -- %
     %
     \section{Theory}
+
+    \begin{equation}
+        S = \sqrt{2} \cdot \sqrt{N_\text{on} \ln\left( \frac{1 + \alpha}{\alpha} \left( \frac{N_\text{on}}{N_\text{on} + N_\text{off}} \right) \right) + N_\text{off} \ln\left( (1 + \alpha) \left( \frac{N_\text{off}}{N_\text{on} + N_\text{off}} \right) \right) }
+        \label{eq:significance}
+    \end{equation}
+
     The energy spectrum is given by the probability distribution function (PDF) $f(E)$ which represents the distribution of energy of individual particles originating from a given source.
     For experimental data, this continueous distribution can not be measured diectly but represented by a histogram in the form of an n-dimensional vector X containing binned even counts.
     In real measurements diverge from the true values of X and are therefore the different vector Y of dimension m.
     Connecting these two we find the migration matix A representing the probabilities of one count to migrate from one energy bin to another:
     \begin{equation}
-        y = A*x
+        y = A \cdot x
         \label{eqn:folding}
     \end{equation}
     The migrationmatrix is normalzed and can be inverted if its dimensions n and m are equal:
@@ -76,7 +82,7 @@ Therefore, in the process of unfolding, data of real observations can be correct
         x = A^{-1}y
         \label{eqn:unfolding}
     \end{equation}
-    If n $!=$ m, this is still possible by using a pseudoinverse for $A^{-1}$ by means of singular value decomposition (SVD) for exapmle.
+    If $n \neq m$, this is still possible by using a pseudoinverse for $A^{-1}$ by means of singular value decomposition (SVD) for exapmle.
     In general this method is called unfolding as the deviation of measured data as seen in \ref*{eqn:folding} represents the continueous Fredholm equation for folding:
     \begin{equation}
         g(y)= \int A(x,y)f(x) \symup(d)x 
@@ -92,15 +98,15 @@ Therefore, in the process of unfolding, data of real observations can be correct
     \end{equation}
     with 
     \begin{equation}
-        \lambda A*f
+        \lambda = A \cdot f
     \end{equation}
     resulting in the likelihood function
     \begin{equation}
-        L = \prod_{i=1}^M P(g_i,\lambda)
+        \mathcal{L} = \prod_{i=1}^M P(g_i,\lambda)
     \end{equation}
     which can be minimized as follows:
     \begin{equation}
-        \text{argmin}(- \ln L)=\text{argmin}\left(\sum_{i=1}^M \ln(g_i \!)-g_i* \ln\lambda_i+\lambda_i\right)
+        \text{argmin}(- \ln \mathcal{L})=\text{argmin}\left(\sum_{i=1}^M \ln(g_i \!)-g_i \cdot \ln\lambda_i+\lambda_i\right)
     \end{equation}
     This computation is done numerically.
 %
@@ -116,13 +122,64 @@ Therefore, in the process of unfolding, data of real observations can be correct
 %
 % -- Auswertung -- %
 %
-    \section{Evaluation}
+    \section{Analysis}
+        
+        \subsection{Theta-Square-Plot}
+            First a Theta-Square plot is created for the real Crab Nebula measurements.
+            For this all events which the Random Forest Classifier classifies as gamma-ray events with a confidence of $\geq \num{0.8}$ are histogrammed.
+            The resulting plot is shown in Figure \ref{fig:theta_sq}.
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{build/theta_sq.pdf}
+                \caption{
+                    Theta-Square plot of data from $\SI{17.5}{\hour}$ of observation time of the crab nebula.
+                    The event counts for the On-position and the five Off-positions are histogrammed into 20 bins.
+                    For clarity the combined counts and errorbars of the Off-position measurements are divided by the number of positions.
+                }
+                \label{fig:theta_sq}
+            \end{figure}
+            Based on this the significance of detection can be calculated with the likelihood-ratio test due to Li \& Ma \cite{} as shown in equation \eqref{eq:significance}.
+            The cut of $\theta^2 = 0.025$ results in values of $N_\text{on} = 2582$ and $N_\text{off} = 8916$ and with a ratio of one to five of On- to Off-positions $\alpha = 0.2$ results.
+            With these a significance of
+            \begin{equation}
+                S = 15.9 \; \sigma
+            \end{equation}
+            is calculated.
+            
+
+        
+        \subsection{Energy Migration}
+            Next the detector response matrix $A$, which in this case is the so-called energy migration matrix of the Random Forest Regressor, is determined.
+            To do this the simulated gamma-ray event data has to be used.
+            This is because knowledge of not only the predicted, but also the true energies of the events is needed.
+            The true and predicted energies are histogrammed in a two-dimensional histogram.
+            The bins of this histogram constitute the matrix in question, though it is not normalized yet.
+            To do this the matrix elements in each row are divided by the sum of the elements in that row.
+        \subsection{Unfolding of Crab Nebula Data}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{build/unfolding.pdf}
+                \caption{
+                    Unfolding
+                }
+                \label{fig:unfolding}
+            \end{figure}
+
+        \subsection{Flux Calculation for Crab Nebula}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{build/flux.pdf}
+                \caption{
+                    Flux
+                }
+                \label{fig:flux}
+            \end{figure}
 
 
 %
 % -- Diskussion -- %
 %
-    \section{Discussion}
+    \section{Results and Discussion}
 
 \newpage
 \printbibliography
