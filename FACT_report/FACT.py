@@ -43,13 +43,14 @@ hist_bg, bins_bg = np.histogram(theta2_bg[theta2_bg<=np.sqrt(0.025)], bins=20)
 # Calculate Number of On- and Off-Events for theta^2 cut of 0.025 
 N_on = len(theta2_s[theta2_s<=np.sqrt(0.025)])
 N_off = len(theta2_bg[theta2_bg<=np.sqrt(0.025)])
+print("N_on, N_off: ", N_on, N_off)
 
 # Alpha is the size-factor of on- to off-region
 alpha = 0.2
 
 # Calculate significance with Likelihood-Ratio-Test due to Li & Ma
 S = np.sqrt(2) * np.sqrt(N_on * np.log( (1+alpha)/alpha * N_on/(N_on + N_off)) + N_off * np.log((1+alpha) * N_off/(N_on + N_off)))
-print(S)
+print("Significance: ", S)
 
 
 # 2.4 Energy Migration
