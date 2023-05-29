@@ -109,16 +109,23 @@ Therefore, in the process of unfolding, data of real observations can be correct
         \text{argmin}(- \ln \mathcal{L})=\text{argmin}\left(\sum_{i=1}^M \ln(g_i \!)-g_i \cdot \ln\lambda_i+\lambda_i\right)
     \end{equation}
     This computation is done numerically.
-%
-% -- Aufbau -- %
-%
-    \section{Experimental Setup}
 
-%
-% -- Durchführung -- %
-%
-    \section{Execution/Procedure}
+    In energy spectrum measurements the effective detector area $A_\text{eff}$ is a function of energy and needs to be calculated for each energy bin individually.
+    This effective area is accountable for the deviations between the measured events and existing events.
+    Thanks to the simulated data, $A_\text{eff,i}$ for each bin $i$ can be calculated as follows:
+    \begin{equation}
+        A_\text{eff,i}=\frac{N_\text{detected,i}}{N_\text{simulated, i}}\cdot A
+    \end{equation}
+    With the sumulated number of events $N_\text{simulated,i}$ and the number of events detected by the telescope $N_\text{detected,i}$.
+
+    Given the detector are the flux $\Phi_i$ in each bin can be calculated:
+    \begin{equation}
+        \Phi_i=\frac{N_i}{A_\text{eff} \cdot \Delta E_i \cdot t_\text{obs}}
+    \end{equation}
+    With the bin energy range $\Delta E_i$ and the observation time $t_obs$
+    \section{Measurement Procedure}
     
+
 %
 % -- Auswertung -- %
 %
