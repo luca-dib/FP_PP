@@ -107,8 +107,19 @@ Therefore, in the process of unfolding, data of real observations can be correct
     which can be minimized as follows:
     \begin{equation}
         \text{argmin}(- \ln \mathcal{L})=\text{argmin}\left(\sum_{i=1}^M \ln(g_i \!)-g_i \cdot \ln\lambda_i+\lambda_i\right)
+        \label{eq:PoissonLikelihood}
     \end{equation}
     This computation is done numerically.
+
+    \begin{equation}
+        A_{\text{eff},i} = \frac{N_{\text{selected},i}}{N_{\text{simulated},i}} \cdot A
+        \label{eq:acceptance}
+    \end{equation}
+
+    \begin{equation}
+        \Phi_i = \frac{\hat{f}_i}{A_{\text{eff},i} \cdot \Delta E_i \cdot t_\text{obs}}
+        \label{eq:flux}
+    \end{equation}
 %
 % -- Aufbau -- %
 %
@@ -124,7 +135,7 @@ Therefore, in the process of unfolding, data of real observations can be correct
 %
     \section{Analysis}
         
-        \subsection{Theta-Square-Plot}
+        \subsection{Theta-Square-Plot and Significance}
             First a Theta-Square plot is created for the real Crab Nebula measurements.
             For this all events which the Random Forest Classifier classifies as gamma-ray events with a confidence of $\geq \num{0.8}$ are histogrammed.
             The resulting plot is shown in Figure \ref{fig:theta_sq}.
@@ -138,11 +149,12 @@ Therefore, in the process of unfolding, data of real observations can be correct
                 }
                 \label{fig:theta_sq}
             \end{figure}
+            
             Based on this the significance of detection can be calculated with the likelihood-ratio test due to Li \& Ma \cite{} as shown in equation \eqref{eq:significance}.
-            The cut of $\theta^2 = 0.025$ results in values of $N_\text{on} = 2582$ and $N_\text{off} = 8916$ and with a ratio of one to five of On- to Off-positions $\alpha = 0.2$ results.
+            The cut of $\theta^2 = \num{0.025}$ results in values of $N_\text{on} = 2582$ and $N_\text{off} = 8916$ and with a ratio of one to five of On- to Off-positions $\alpha = \num{0.2}$ results.
             With these a significance of
             \begin{equation}
-                S = 15.9 \; \sigma
+                S = \num{15.9} \; \sigma
             \end{equation}
             is calculated.
             
@@ -152,25 +164,41 @@ Therefore, in the process of unfolding, data of real observations can be correct
             Next the detector response matrix $A$, which in this case is the so-called energy migration matrix of the Random Forest Regressor, is determined.
             To do this the simulated gamma-ray event data has to be used.
             This is because knowledge of not only the predicted, but also the true energies of the events is needed.
+            
             The true and predicted energies are histogrammed in a two-dimensional histogram.
             The bins of this histogram constitute the matrix in question, though it is not normalized yet.
             To do this the matrix elements in each row are divided by the sum of the elements in that row.
         \subsection{Unfolding of Crab Nebula Data}
+            Using the detector response matrix real data can now be unfolded.
+            There are many different methods of unfolding.
+            Here only two of these will be explored, those being naive SVD unfolding as shown in equation \eqref{eqn:unfolding} as well as Poisson-likelihood unfolding as shown in equation \eqref{eq:PoissonLikelihood}.
+
+            Applying these methods to the energy spectrum of the crab nebula data gives the unfolded histograms as shown in figure \ref{fig:unfolding}.
             \begin{figure}
                 \centering
                 \includegraphics[width=\textwidth]{build/unfolding.pdf}
                 \caption{
-                    Unfolding
+                    The measured and unfolded crab nebula data recorded with FACT.
+                    Shown in red is the measured energy spectrum.
+                    Shown in green (SVD method) and blue (Poisson-likelihood method) are the unfolded energy spectra.
+                    For both the data is binned logarithmically in an energy range of $\SI{500}{\giga\electronvolt} \leq E \leq \SI{15}{\tera\electronvolt}$, with under and overflow bins respectively as required.
                 }
                 \label{fig:unfolding}
             \end{figure}
 
         \subsection{Flux Calculation for Crab Nebula}
+            To calculate the flux from the energy spectrum the effective area of the perfect detector to correct for the limited acceptance of the real detector.
+            This is done according to equation \eqref{eq:acceptance}, for each bin in the real energy.
+
+            Using this, the width of the energy bins $\Delta E_i$ and the observation time $t_\text{obs} \approx \SI{17.7}{\hour}$, the flux can now be calculated using equation \eqref{eq:flux}.
+            The result of this can be seen in figure \ref{fig:flux}.
             \begin{figure}
                 \centering
                 \includegraphics[width=\textwidth]{build/flux.pdf}
                 \caption{
-                    Flux
+                    The flux of the crab nebula as calculated from the FACT data.
+                    Shown in green and blue is the flux calculated with the SVD and Poisson-likelihood unfolded energy spectra respectively.
+                    Additionally the fit curves calculated from data from the MAGIC and HEGRA gamma-ray observatories are shown for comparison.
                 }
                 \label{fig:flux}
             \end{figure}
@@ -180,6 +208,36 @@ Therefore, in the process of unfolding, data of real observations can be correct
 % -- Diskussion -- %
 %
     \section{Results and Discussion}
+        \subsection{Theta-Square-Plot and Significance}
+            In the Theta-Square-Plot seen in figure \ref{fig:theta_sq} the counts of the Off-positions show a noticable background.
+            As is expected of an (at the very least locally) isotropic background the counts are spread over the squared angle in a uniform distribution.
+            This measurement shows the importance of running the telescope in the \enquote{Wobble} observation mode for obtining a clean background sample measurement.
+
+            Regarding the significance, traditionally in the field of physics a detection with significance of $3\:\sigma$ is considered evidence, while a detection of $5\:\sigma$ is considered a discovery.
+            With a significance of $\num{15.9}\:\sigma$ this measurement would be considered a discovery.
+            This shows very clearly that the crab nebula is indeed a source of gamma-ray emissions.
+
+        \subsection{Energy Migration}
+        \subsection{Unfolding of Crab Nebula Data}
+            The two methods used for unfolding differ only very slightly in their result.
+            SVD unfolding gives almost negligable errors, so much so that it was necessary to magnify them thousandfold to make them visible in figure \ref{fig:unfolding}, while Poisson-Likelihood unfolding yields comparable errors to the measured spectrum.
+            
+            The measured data contained no event which was measured below $\SI{500}{\giga\electronvolt}$, although unfolding shows a not insignificant amount of events here.
+            This can be explained with the energy sensitivity of FACT.
+            The telescope is very likely insensitive for gamma-rays with energies below this threshold, which results in no measured events in this region.
+        \subsection{Flux Calculation for Crab Nebula}
+            Comparing the flux calculated with FACT to the fits of MAGIC and HEGRA shows a clear overestimation for energies above $\SI{1}{\tera\electronvolt}$, with deviations up to more than one order of magnitude in the high end of the observed energies.
+            The flux for the different methods of unfolding the energy spectrum show almost negligable difference, thus the discrepancy cannot be explained by this.
+
+            Part of a more likely explaination is simply a lack of data.
+            The data used in this experiment is from an observation time of only around $\SI{17.7}{\hour}$, whereas the data from HEGRA comes from almost $\SI{400}{\hour}$ of observation time and the MAGIC data from $\SI{69}{\hour}$.
+            The discrepancy in the results might be due to this, although the low bin count to maximize events per bin should alleviate statistical error due to low event counts.
+
+            Another possible explaination is the operating mode of this telescope.
+            The FACT telescope is a single gamma-ray telescope, whereas the MAGIC and HEGRA telescopes work in stereoscopic mode, where two or more telescopes observe the same target simultaneously.
+            HEGRA used 5 telescopes simultaneously, while MAGIC uses two.
+            This operating mode not only improves direction measurement, but also offers background rejection since it is unlikely that multiple telescopes measure background radiation simultaneously.
+            
 
 \newpage
 \printbibliography
