@@ -137,7 +137,7 @@ N_sim = hist_E_true[1:-1]
 A_eff = N_sel/N_sim/0.7 * A_tot
 
 # Import observation time, sum
-t_obs = crab_runs["ontime"][gamma_crab].to_numpy()
+t_obs = crab_runs["ontime"].to_numpy()
 t_obs = t_obs.sum()
 
 
@@ -196,7 +196,7 @@ width_true = np.diff(bins_E_true)/2
 ax.stairs(g_crab[:-1], bins_E_crab[:-1], color="r", linewidth=0.5, zorder=3 ,fill="True",alpha=0.1)
 ax.errorbar(x_pred, g_crab, xerr=width_pred, yerr=np.sqrt(g_crab), fmt="none", ecolor="r", elinewidth=0.5, label=r"Measured")
 ax.stairs(f_crab[:-1], bins_E_true[:-1], color="g", linewidth=0.5, zorder=2,fill="True",alpha=0.1)
-ax.errorbar(x_true, f_crab, xerr=width_true, yerr=err_SVD, fmt="None", ecolor="g", elinewidth=0.7, label=r"SVD Unfolded")
+ax.errorbar(x_true, f_crab, xerr=width_true, yerr=err_SVD*1000, fmt="None", ecolor="g", elinewidth=0.7, label=r"SVD Unfolded (error magnified by 1000)")
 ax.stairs(f_like[:-1], bins_E_true[:-1], color="b", linewidth=0.5, zorder=1,fill="True",alpha=0.1)
 ax.errorbar(x_true, f_like, xerr=width_true, yerr=err_f, fmt="none", ecolor="b", elinewidth=0.7, label=r"Poisson-likelihood Unfolded")
 
