@@ -39,58 +39,56 @@
 
 % -- Zielsetzung -- %
 \section{Introduction}
-The First G-APD Cherenkov Tesescope (FACT) is a ground based telescope which utilizes Silicon Photomultipliers (aka. G-APTs, hence the name) to measure extensive air showers caused by relativistic Particles in the Atmosphere.
-This technique of measuring astronomic radiation offers various advantages over more direct measurement methods.
-Prominent targets of such measurements are gamma emitters such as super nova remnants such as the crab nebula and active galactic nuclei of various distant galaxies.
+The First G-APD Cherenkov Tesescope (FACT) is a ground based telescope which utilizes Silicon Photomultipliers (SiPMs and more specifically G-APTs, hence the name) to measure Extensive Air Showers (EAS) caused by relativistic Particles interacting with the Atmosphere.
+This technique of measuring astronomic radiation offers various advantages over more direct measurement methods like FERMI.
+Prominent targets of such measurements are gamma emitters such as Super Nova Remnants (SNR) and active galactic nuclei of various distant galaxies.
+In this report the energy spectrum of the crab nebula is analyzed using measurements taken with FACT.
 
 \subsection{FACT}
 Fact is operational since 2011 and is positioned at the Observatorio Roque de los Muchachos on the Canary island of La Palma.    
-Similarly to other ground sationed gamma-ray telescopes, FACT measures the Cherenkov-light emitted by secondary particles in the atmosphere that emerge when the initial ray interacts with the atmosphere.
-The amplitude of this light is dim compared to daylight and therefore observations can only be performed during nighttime.
+Similarly to other ground stationed gamma-ray telescopes such as MAGIC or CTAs telescopes, FACT measures the Cherenkov-light emitted by secondary particles in the atmosphere whhich are produced when the initial ray interacts with the atmosphere.
+When a highly energetic gamma-ray interacts with Particles in the atmosphere, electron-positron pairs are created which travel at relativistic speeds thereby emitting light via Cherenkov Radiation.
+The amplitude of this light is dim compared to daylight and therefore observations can only be performed during night time.
 
-Since beginning of operation, the telescope has collectet data on the gamma-ray emissions of varoius point of interest and passed the data on to the computer analysis part of the observation.
-Here, the raw information from observations is converted into a more managable for further analysis.
-Various calculations are performed, including the calibrations of each pixels current in the cameras detector, finding the mean time and intensity of the individual pixel.
+Since the beginning of its operation, the telescope has collected data on the gamma-ray emissions of varoius points of interest and passed on the data to the computer analysis part of the observation.
+Here, the raw information from observations is converted into a more managable form for further analysis.
+Various calculations are performed, including the calibrations of each pixels readout in the cameras detector, including finding the mean time and intensity of the individual pixel.
 Using these values, the background noise is removed from the pixels containing cherenkov light and the resulting shape in the camera view is used to determine the Hillas parameters including the estimated energy of the original ray.
 
 \subsection{Simulated Data}
-In the later steps of this analysis, reference data is required that will be used to form calculations on the detector response which represents the imperfect measurement of an event.
-This process involves simulated data created with the CORSICA program\cite{corsica} by cumputing a digital representation of particles that are involved in the observation.
-Then, the CERES software \cite{ceres} simulates how FACT would respond to these particles.
+In the later steps of this analysis, reference data is required to the detector response which represents the imperfect measurement of an event.
+This process involves simulated data created with the CORSIKA program \cite{corsika} by computing a digital representation of particles that are involved in the observation.
+Then, the CERES software simulates how FACT would respond to these particles.
 As the result of this method, samples of observations are given where the true properties of the initial particle are known.
-Therefore, in the process of unfolding, data of real observations can be corrected using calculations presented in the following chapter. 
+Therefore, in the process of unfolding, data of real observations can be corrected using the calculations presented in the following chapter. 
     %
     % -- Theorie -- %
     %
     \section{Theory}
 
-    \begin{equation}
-        S = \sqrt{2} \cdot \sqrt{N_\text{on} \ln\left( \frac{1 + \alpha}{\alpha} \left( \frac{N_\text{on}}{N_\text{on} + N_\text{off}} \right) \right) + N_\text{off} \ln\left( (1 + \alpha) \left( \frac{N_\text{off}}{N_\text{on} + N_\text{off}} \right) \right) }
-        \label{eq:significance}
-    \end{equation}
-
-    The energy spectrum is given by the probability distribution function (PDF) $f(E)$ which represents the distribution of energy of individual particles originating from a given source.
+    The energy spectrum is given by the probability distribution function (PDF) $f(E)$ which represents the distribution of energy of individual particles.
     For experimental data, this continueous distribution can not be measured diectly but represented by a histogram in the form of an n-dimensional vector X containing binned even counts.
-    In real measurements diverge from the true values of X and are therefore the different vector Y of dimension m.
-    Connecting these two we find the migration matix A representing the probabilities of one count to migrate from one energy bin to another:
+    Real measurements diverge from the true values of $X$ and are therefore the different vector $Y$ of dimension m.
+    Connecting these two we find the migration matix $A$ representing the probabilities of one count to migrate from one energy bin to another:
     \begin{equation}
         y = A \cdot x
         \label{eqn:folding}
-    \end{equation}
-    The migrationmatrix is normalzed and can be inverted if its dimensions n and m are equal:
-    \begin{equation}
-        x = A^{-1}y
-        \label{eqn:unfolding}
-    \end{equation}
-    If $n \neq m$, this is still possible by using a pseudoinverse for $A^{-1}$ by means of singular value decomposition (SVD) for exapmle.
-    In general this method is called unfolding as the deviation of measured data as seen in \ref*{eqn:folding} represents the continueous Fredholm equation for folding:
+    \end{equation} 
+    This discrete equasion of vectors and a matrix represents the continueous Fredholm equation for folding:
     \begin{equation}
         g(y)= \int A(x,y)f(x) \symup(d)x 
     \end{equation}
     Here, $g(y)$ is the true pdf, $A(x,y)$ the folding function, $f(x)$ the distorted pdf corresponding to the true energy distribution, migration matrix, and measured energy respectively.
 
+    The migration matrix is normalzed and can be inverted if its dimensions n and m are equal:
+    \begin{equation}
+        x = A^{-1}y
+        \label{eqn:unfolding}
+    \end{equation}
+    If $n \neq m$, this is still possible by using a pseudoinverse $A^{-1}$ by means of singular value decomposition (SVD) for exapmle.
+   
     Alternatively to SVD, the pseudoinverse matix $A$ can also be detirmined using minimization algorythms.
-    One such algorythm is the maximum-likelyhood optimization under the assumption that both $f$ and $g$ follow a poisson distribution.
+    One such algorythm is the poisson-likelyhood optimization under the assumption that both $f$ and $g$ follow a poisson distribution.
 
     Under this condition, the bin populations 
     \begin{equation}
@@ -112,7 +110,7 @@ Therefore, in the process of unfolding, data of real observations can be correct
     This computation is done numerically.
 
     In energy spectrum measurements the effective detector area $A_\text{eff}$ is a function of energy and needs to be calculated for each energy bin individually.
-    This effective area is accountable for the deviations between the measured events and existing events.
+    This effective area contributes to the deviations between the measured events and existing events.
     Thanks to the simulated data, $A_\text{eff,i}$ for each bin $i$ can be calculated as follows:
     \begin{equation}
         A_{\text{eff},i} = \frac{N_{\text{detected},i}}{N_{\text{simulated},i}} \cdot A
@@ -120,15 +118,19 @@ Therefore, in the process of unfolding, data of real observations can be correct
     \end{equation}
     With the sumulated number of events $N_{\text{simulated},i}$ and the number of events detected by the telescope $N_{\text{detected},i}$.
 
-    Given the detector are the flux $\Phi_i$ in each bin can be calculated:
+    The flux $\Phi_i$ in each bin can be calculated as follows:
     \begin{equation}
         \Phi_i = \frac{\hat{f}_i}{A_{\text{eff},i} \cdot \Delta E_i \cdot t_\text{obs}}
         \label{eq:flux}
     \end{equation}
     With the bin energy range $\Delta E_i$ and the observation time $t_\text{obs}$
-    \section{Measurement Procedure}
     
-
+    For the significance $S$ of a whole measurement the Likelihood-Ratio Test taken from Li and Ma can be used:
+    \begin{equation}
+        S = \sqrt{2} \cdot \sqrt{N_\text{on} \ln\left( \frac{1 + \alpha}{\alpha} \left( \frac{N_\text{on}}{N_\text{on} + N_\text{off}} \right) \right) + N_\text{off} \ln\left( (1 + \alpha) \left( \frac{N_\text{off}}{N_\text{on} + N_\text{off}} \right) \right) }
+        \label{eq:significance}
+    \end{equation}
+    Here, the $N_\text{on}$ represent the envent counts of a given source and $N_\text{off}$ the reference background noise.
 %
 % -- Auswertung -- %
 %
