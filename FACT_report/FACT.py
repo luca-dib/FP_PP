@@ -235,3 +235,10 @@ ax.legend(loc="lower left")
 
 plt.savefig("build/flux.pdf")
 plt.close()
+
+plt.imshow(A)
+plt.colorbar()
+plt.xlabel(r"Column")
+plt.ylabel(r"Row")
+plt.savefig("build/A.pdf")
+plt.close()
