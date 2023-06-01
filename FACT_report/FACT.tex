@@ -39,15 +39,15 @@
 
 % -- Zielsetzung -- %
 \section{Introduction}
-The First G-APD Cherenkov Tesescope (FACT) is a ground based telescope which utilizes Silicon Photomultipliers (SiPMs and more specifically G-APTs, hence the name) to measure Extensive Air Showers (EAS) caused by relativistic Particles interacting with the Atmosphere.
-This technique of measuring astronomic radiation offers various advantages over more direct measurement methods like FERMI.
-Prominent targets of such measurements are gamma emitters such as Super Nova Remnants (SNR) and active galactic nuclei of various distant galaxies.
+The First G-APD Cherenkov Tesescope (FACT) is a ground based telescope which utilizes Silicon Photomultipliers (SiPMs) and more specifically Geiger Avalance Photodiodes (G-APDs), to measure Extensive Air Showers (EAS) caused by relativistic particles interacting with the atmosphere.
+%This technique of measuring astronomic radiation offers various advantages over more direct measurement methods like FERMI.
+Prominent targets of such measurements are gamma-ray emitters such as Super Nova Remnants (SNR) and active galactic nuclei of various distant galaxies.
 In this report the energy spectrum of the crab nebula is analyzed using measurements taken with FACT.
 
 \subsection{FACT}
-Fact is operational since 2011 and is positioned at the Observatorio Roque de los Muchachos on the Canary island of La Palma.    
-Similarly to other ground stationed gamma-ray telescopes such as MAGIC or CTAs telescopes, FACT measures the Cherenkov-light emitted by secondary particles in the atmosphere whhich are produced when the initial ray interacts with the atmosphere.
-When a highly energetic gamma-ray interacts with Particles in the atmosphere, electron-positron pairs are created which travel at relativistic speeds thereby emitting light via Cherenkov Radiation.
+FACT is operational since 2011 and is positioned at the Observatorio Roque de los Muchachos on the Canary island of La Palma.    
+Similarly to other ground stationed gamma-ray telescopes such as MAGIC or CTAs telescopes, FACT measures the Cherenkov-light emitted by secondary particles in the atmosphere which are produced when the initial ray interacts with the atmosphere.
+When a highly energetic gamma-ray interacts with particles in the atmosphere, electron-positron pairs are created which travel at relativistic speeds thereby emitting light via Cherenkov Radiation.
 The amplitude of this light is dim compared to daylight and therefore observations can only be performed during night time.
 
 Since the beginning of its operation, the telescope has collected data on the gamma-ray emissions of varoius points of interest and passed on the data to the computer analysis part of the observation.
@@ -74,7 +74,7 @@ Therefore, in the process of unfolding, data of real observations can be correct
         y = A \cdot x
         \label{eqn:folding}
     \end{equation} 
-    This discrete equasion of vectors and a matrix represents the continueous Fredholm equation for folding:
+    This discrete equation of vectors and a matrix represents the continueous Fredholm equation for folding:
     \begin{equation}
         g(y)= \int A(x,y)f(x) \symup(d)x 
     \end{equation}
@@ -87,8 +87,8 @@ Therefore, in the process of unfolding, data of real observations can be correct
     \end{equation}
     If $n \neq m$, this is still possible by using a pseudoinverse $A^{-1}$ by means of singular value decomposition (SVD) for exapmle.
    
-    Alternatively to SVD, the pseudoinverse matix $A$ can also be detirmined using minimization algorythms.
-    One such algorythm is the poisson-likelyhood optimization under the assumption that both $f$ and $g$ follow a poisson distribution.
+    Alternatively to SVD, the pseudoinverse matix $A$ can also be determined using minimization algorithms.
+    One such algorithm is the Poisson-likelihood optimization under the assumption that both $f$ and $g$ follow a Poisson distribution.
 
     Under this condition, the bin populations 
     \begin{equation}
@@ -111,7 +111,7 @@ Therefore, in the process of unfolding, data of real observations can be correct
 
     In energy spectrum measurements the effective detector area $A_\text{eff}$ is a function of energy and needs to be calculated for each energy bin individually.
     This effective area contributes to the deviations between the measured events and existing events.
-    Thanks to the simulated data, $A_\text{eff,i}$ for each bin $i$ can be calculated as follows:
+    Thanks to the simulated data, $A_{\text{eff},i}$ for each bin $i$ can be calculated as follows:
     \begin{equation}
         A_{\text{eff},i} = \frac{N_{\text{detected},i}}{N_{\text{simulated},i}} \cdot A
         \label{eq:acceptance}
@@ -125,12 +125,12 @@ Therefore, in the process of unfolding, data of real observations can be correct
     \end{equation}
     With the bin energy range $\Delta E_i$ and the observation time $t_\text{obs}$
     
-    For the significance $S$ of a whole measurement the Likelihood-Ratio Test taken from Li and Ma can be used:
+    For the significance $S$ of a whole measurement the Likelihood-Ratio Test taken from Li and Ma \cite{significance} can be used:
     \begin{equation}
         S = \sqrt{2} \cdot \sqrt{N_\text{on} \ln\left( \frac{1 + \alpha}{\alpha} \left( \frac{N_\text{on}}{N_\text{on} + N_\text{off}} \right) \right) + N_\text{off} \ln\left( (1 + \alpha) \left( \frac{N_\text{off}}{N_\text{on} + N_\text{off}} \right) \right) }
         \label{eq:significance}
     \end{equation}
-    Here, the $N_\text{on}$ represent the envent counts of a given source and $N_\text{off}$ the reference background noise.
+    Here, the $N_\text{on}$ represent the envent counts of a given source, $N_\text{off}$ the reference background noise, and $\alpha$ is the ratio between the On- to the Off-regions.
 %
 % -- Auswertung -- %
 %
@@ -248,5 +248,5 @@ Therefore, in the process of unfolding, data of real observations can be correct
 
 \newpage
 \printbibliography
-\newpage
+%\newpage
 \end{document}
