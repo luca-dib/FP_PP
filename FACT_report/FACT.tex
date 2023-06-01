@@ -53,7 +53,7 @@ The amplitude of this light is dim compared to daylight and therefore observatio
 Since the beginning of its operation, the telescope has collected data on the gamma-ray emissions of varoius points of interest and passed on the data to the computer analysis part of the observation.
 Here, the raw information from observations is converted into a more managable form for further analysis.
 Various calculations are performed, including the calibrations of each pixels readout in the cameras detector, including finding the mean time and intensity of the individual pixel.
-Using these values, the background noise is removed from the pixels containing cherenkov light and the resulting shape in the camera view is used to determine the Hillas parameters including the estimated energy of the original ray.
+Using these values, the background noise is removed from the pixels containing cherenkov light and the resulting shape in the camera view is used to determine the Hillas parameters including the estimated energy of the original ray \cite{FACT4} \cite{FACT5}.
 
 \subsection{Simulated Data}
 In the later steps of this analysis, reference data is required to the detector response which represents the imperfect measurement of an event.
@@ -69,12 +69,12 @@ Therefore, in the process of unfolding, data of real observations can be correct
     The energy spectrum is given by the probability distribution function (PDF) $f(E)$ which represents the distribution of energy of individual particles.
     For experimental data, this continueous distribution can not be measured diectly but represented by a histogram in the form of an n-dimensional vector X containing binned even counts.
     Real measurements diverge from the true values of $X$ and are therefore the different vector $Y$ of dimension m.
-    Connecting these two we find the migration matix $A$ representing the probabilities of one count to migrate from one energy bin to another:
+    Connecting these two we find the migration matix $A$ representing the probabilities of one count to migrate from one energy bin to another \cite{FACTManual}:
     \begin{equation}
         y = A \cdot x
         \label{eqn:folding}
     \end{equation} 
-    This discrete equation of vectors and a matrix represents the continueous Fredholm equation for folding:
+    This discrete equation of vectors and a matrix represents the continueous Fredholm equation \cite{FACTManual} for folding:
     \begin{equation}
         g(y)= \int A(x,y)f(x) \symup(d)x 
     \end{equation}
@@ -102,7 +102,7 @@ Therefore, in the process of unfolding, data of real observations can be correct
     \begin{equation}
         \mathcal{L} = \prod_{i=1}^M P(g_i,\lambda)
     \end{equation}
-    which can be minimized as follows:
+    which can be minimized as follows \cite{FACTManual}:
     \begin{equation}
         \text{argmin}(- \ln \mathcal{L})=\text{argmin}\left(\sum_{i=1}^M \ln(g_i \!)-g_i \cdot \ln\lambda_i+\lambda_i\right)
         \label{eq:PoissonLikelihood}
@@ -111,7 +111,7 @@ Therefore, in the process of unfolding, data of real observations can be correct
 
     In energy spectrum measurements the effective detector area $A_\text{eff}$ is a function of energy and needs to be calculated for each energy bin individually.
     This effective area contributes to the deviations between the measured events and existing events.
-    Thanks to the simulated data, $A_{\text{eff},i}$ for each bin $i$ can be calculated as follows:
+    Thanks to the simulated data, $A_{\text{eff},i}$ for each bin $i$ can be calculated as follows \cite{FACTManual}:
     \begin{equation}
         A_{\text{eff},i} = \frac{N_{\text{detected},i}}{N_{\text{simulated},i}} \cdot A
         \label{eq:acceptance}
@@ -157,7 +157,7 @@ Therefore, in the process of unfolding, data of real observations can be correct
                 \label{fig:theta_sq}
             \end{figure}
             
-            Based on this the significance of detection can be calculated with the likelihood-ratio test due to Li \& Ma \cite{Significance} as shown in equation \eqref{eq:significance}.
+            Based on this the significance of detection can be calculated with the likelihood-ratio test due to Li \& Ma \cite{significance} as shown in equation \eqref{eq:significance}.
             The cut of $\theta^2 = \num{0.025}$ results in values of $N_\text{on} = 2582$ and $N_\text{off} = 8916$ and with a ratio of one to five of On- to Off-positions $\alpha = \num{0.2}$ results.
             With these a significance of
             \begin{equation}
