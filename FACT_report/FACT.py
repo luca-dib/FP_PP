@@ -96,34 +96,45 @@ A_inv = np.linalg.pinv(A,rcond=0)
 err_SVD = np.sqrt(np.diag(np.cov(A_inv)))
 
 # Define log-likelihood function and jacobian for Poisson-Likelihood Unfolding
-def loglikelihood(f,g):
+def loglikelihood(f,g,b):
     L_poisson = np.empty(len(g))
     for i in range(len(g)):
-        L_poisson[i] = -g[i] * np.log(A @ f)[i] + (A@f)[i]
+        L_poisson[i] = -g[i] * np.log(A @ f + b)[i] + (A@f + b)[i]
     L_poisson = L_poisson.sum()
     return L_poisson
 
-def loglikelihood_jac(f,g):
+def loglikelihood_jac(f,g,b):
     L_poisson = np.empty(len(f))
     
     for i in range(len(f)):
-        L_poisson[i] = -g @ (A[:,i] / (A @ f)) + A[:,i].sum()
+        L_poisson[i] = -g @ (A[:,i] / ((A @ f) + b)) + A[:,i].sum()
         
     return L_poisson
 
 # Get Crab Nebula measured Energies
 E_crab = crab["gamma_energy_prediction"][gamma_crab].to_numpy()
 
+signal_mask = np.logical_and(crab["gamma_prediction"] >= 0.8, crab["theta_deg"]**2 <= np.sqrt(0.025))
+
+bg_crab = crab[["theta_deg_off_1","theta_deg_off_2","theta_deg_off_3","theta_deg_off_4","theta_deg_off_5"]].to_numpy()**2 <= np.sqrt(0.025)
+background_mask = np.logical_and(crab["gamma_prediction"] >= 0.8, np.any(bg_crab,axis=1))
+
+E_signal = crab["gamma_energy_prediction"][signal_mask].to_numpy()
+E_background = crab["gamma_energy_prediction"][background_mask].to_numpy()
+
 # Make energy histogram
 g_crab, bins_E_crab = np.histogram(E_crab, bins_pred)
+signal, _ = np.histogram(E_signal, bins_pred)
+background, _ = np.histogram(E_background, bins_pred)
+print(g_crab,signal,background)
 
 # Naive SVD Unfolding
-f_crab = A_inv@g_crab
+f_crab = A_inv@(signal)
 
-x0 ,_ = np.histogram(E_crab,bins_true) # use measured events as starting values for minimization
+x0 ,_ = np.histogram(E_signal,bins_true) # use measured events as starting values for minimization
 
 # Poisson Likelihood Unfolding
-min_l = minimize(loglikelihood,x0,args=(g_crab),method="BFGS",jac=loglikelihood_jac)
+min_l = minimize(loglikelihood,x0,args=(signal+background,background),method="BFGS",jac=loglikelihood_jac)
 f_like = min_l.x
 err_f = np.sqrt(np.diag(min_l.hess_inv))
 
@@ -134,7 +145,7 @@ err_f = np.sqrt(np.diag(min_l.hess_inv))
 A_tot = np.pi*270**2
 N_sel, _ = np.histogram(E_pred,bins_true[1:-1])
 N_sim = hist_E_true[1:-1]
-A_eff = N_sel/N_sim/0.7 * A_tot
+A_eff = N_sel/N_sim*0.7 * A_tot
 
 # Import observation time, sum
 t_obs = crab_runs["ontime"].to_numpy()
@@ -193,10 +204,13 @@ x_pred = bins_E_pred[:-1] + np.diff(bins_E_pred)/2
 width_pred = np.diff(bins_E_pred)/2
 width_true = np.diff(bins_E_true)/2
 
-ax.stairs(g_crab[:-1], bins_E_crab[:-1], color="r", linewidth=0.5, zorder=3 ,fill="True",alpha=0.1)
-ax.errorbar(x_pred, g_crab, xerr=width_pred, yerr=np.sqrt(g_crab), fmt="none", ecolor="r", elinewidth=0.5, label=r"Measured")
+ax.stairs((signal+background)[:-1], bins_E_crab[:-1], color="r", linewidth=0.5, zorder=3 ,fill="True",alpha=0.1)
+ax.errorbar(x_pred, (signal+background), xerr=width_pred, yerr=np.sqrt(signal+background), fmt="none", ecolor="r", elinewidth=0.5, label=r"Measured Signal+Background")
+ax.errorbar(x_pred, background, xerr=width_pred, yerr=np.sqrt(background), fmt="none", ecolor="m", elinewidth=0.5, label=r"Measured Background")
+ax.errorbar(x_pred, signal, xerr=width_pred, yerr=np.sqrt(signal), fmt="none", ecolor="k", elinewidth=0.5, label=r"Measured Signal")
+
 ax.stairs(f_crab[:-1], bins_E_true[:-1], color="g", linewidth=0.5, zorder=2,fill="True",alpha=0.1)
-ax.errorbar(x_true, f_crab, xerr=width_true, yerr=err_SVD*1000, fmt="None", ecolor="g", elinewidth=0.7, label=r"SVD Unfolded (error magnified by 1000)")
+ax.errorbar(x_true, f_crab, xerr=width_true, yerr=err_SVD*100, fmt="None", ecolor="g", elinewidth=0.7, label=r"SVD Unfolded (error magnified by 1000)")
 ax.stairs(f_like[:-1], bins_E_true[:-1], color="b", linewidth=0.5, zorder=1,fill="True",alpha=0.1)
 ax.errorbar(x_true, f_like, xerr=width_true, yerr=err_f, fmt="none", ecolor="b", elinewidth=0.7, label=r"Poisson-likelihood Unfolded")
 
