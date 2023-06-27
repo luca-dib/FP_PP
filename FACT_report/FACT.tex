@@ -67,25 +67,25 @@ Therefore, in the process of unfolding, data of real observations can be correct
     \section{Theory}
 
     The energy spectrum is given by the probability distribution function (PDF) $f(E)$ which represents the distribution of energy of individual particles.
-    For experimental data, this continueous distribution can not be measured diectly but represented by a histogram in the form of an n-dimensional vector X containing binned even counts.
-    Real measurements diverge from the true values of $X$ and are therefore the different vector $Y$ of dimension m.
+    For experimental data, this continueous distribution can not be measured diectly but represented by a histogram in the form of an $n$-dimensional vector $f$ containing binned even counts.
+    Real measurements diverge from the true values of $f$ and are therefore the different vector $g$ of dimension $m$.
     Connecting these two we find the migration matix $A$ representing the probabilities of one count to migrate from one energy bin to another \cite{FACTManual}:
     \begin{equation}
-        y = A \cdot x
+        g = A \cdot f + b
         \label{eqn:folding}
     \end{equation} 
     This discrete equation of vectors and a matrix represents the continueous Fredholm equation \cite{FACTManual} for folding:
     \begin{equation}
-        g(y)= \int A(x,y)f(x) \symup(d)x 
+        g(y)= \int A(x,y)f(x) \symup{d}x + b(y)
     \end{equation}
-    Here, $g(y)$ is the true pdf, $A(x,y)$ the folding function, $f(x)$ the distorted pdf corresponding to the true energy distribution, migration matrix, and measured energy respectively.
+    Here, $f(x)$ is the true PDF, $A(x,y)$ the folding function, $g(y)$ the distorted PDF corresponding to the measured distibution including the background $b(y)$.
 
     The migration matrix is normalzed and can be inverted if its dimensions n and m are equal:
     \begin{equation}
-        x = A^{-1}y
+        f = A^{-1}(g-b)
         \label{eqn:unfolding}
     \end{equation}
-    If $n \neq m$, this is still possible by using a pseudoinverse $A^{-1}$ by means of singular value decomposition (SVD) for exapmle.
+    If $n \neq m$, this is still possible by using a pseudoinverse $A^{+}$ by means of singular value decomposition (SVD) for exapmle.
    
     Alternatively to SVD, the pseudoinverse matix $A$ can also be determined using minimization algorithms.
     One such algorithm is the Poisson-likelihood optimization under the assumption that both $f$ and $g$ follow a Poisson distribution.
@@ -96,7 +96,7 @@ Therefore, in the process of unfolding, data of real observations can be correct
     \end{equation}
     with 
     \begin{equation}
-        \lambda = A \cdot f
+        \lambda = A \cdot f + b
     \end{equation}
     resulting in the likelihood function
     \begin{equation}
@@ -158,7 +158,7 @@ Therefore, in the process of unfolding, data of real observations can be correct
             \end{figure}
             
             Based on this the significance of detection can be calculated with the likelihood-ratio test due to Li \& Ma \cite{significance} as shown in equation \eqref{eq:significance}.
-            The cut of $\theta^2 = \num{0.025}$ results in values of $N_\text{on} = 2582$ and $N_\text{off} = 8916$ and with a ratio of one to five of On- to Off-positions $\alpha = \num{0.2}$ results.
+            The cut of $\theta^2_\text{cut} = \SI{0.025}{\degree\squared}$ results in values of $N_\text{on} = 2582$ and $N_\text{off} = 8916$ and with a ratio of one to five of On- to Off-positions $\alpha = \num{0.2}$ results.
             With these a significance of
             \begin{equation}
                 S = \num{15.9} \; \sigma
@@ -191,13 +191,15 @@ Therefore, in the process of unfolding, data of real observations can be correct
             There are many different methods of unfolding.
             Here only two of these will be explored, those being naive SVD unfolding as shown in equation \eqref{eqn:unfolding} as well as Poisson-likelihood unfolding as shown in equation \eqref{eq:PoissonLikelihood}.
 
-            Applying these methods to the energy spectrum of the crab nebula data gives the unfolded histograms as shown in figure \ref{fig:unfolding}.
+            Applying these methods to the energy spectrum of the crab nebula data after seperating signal and background gives the unfolded histograms as shown in figure \ref{fig:unfolding}.
+            The signal/background is the same as the earlier $\theta^2_\text{cut} = \SI{0.025}{\degree\squared}$.
             \begin{figure}
                 \centering
                 \includegraphics[width=\textwidth]{build/unfolding.pdf}
                 \caption{
                     The measured and unfolded crab nebula data recorded with FACT.
-                    Shown in red is the measured energy spectrum.
+                    Shown in red is the total measured energy spectrum.
+                    Shown in magenta and black are the seperated signal and background components.
                     Shown in green (SVD method) and blue (Poisson-likelihood method) are the unfolded energy spectra.
                     For both the data is binned logarithmically in an energy range of $\SI{500}{\giga\electronvolt} \leq E \leq \SI{15}{\tera\electronvolt}$, with under and overflow bins respectively as required.
                 }
@@ -207,6 +209,7 @@ Therefore, in the process of unfolding, data of real observations can be correct
         \subsection{Flux Calculation for Crab Nebula}
             To calculate the flux from the energy spectrum the effective area of the perfect detector to correct for the limited acceptance of the real detector.
             This is done according to equation \eqref{eq:acceptance}, for each bin in the real energy.
+            To account for the fact that the simulation data the effective area is calculated from is only a random subset of $\SI{70}{\percent}$ of the total simulated events, the effective area is also divided by $\num{0.7}$.
 
             Using this, the width of the energy bins $\Delta E_i$ and the observation time $t_\text{obs} \approx \SI{17.7}{\hour}$, the flux can now be calculated using equation \eqref{eq:flux}.
             The result of this can be seen in figure \ref{fig:flux}.
@@ -245,23 +248,24 @@ Therefore, in the process of unfolding, data of real observations can be correct
             This would be described through the matrix entries far from the diagonal, which explains the vanishingly small entries in these elements in the calculated matrix.
         \subsection{Unfolding of Crab Nebula Data}
             The two methods used for unfolding differ only very slightly in their result.
-            SVD unfolding gives almost negligable errors, so much so that it was necessary to magnify them thousandfold to make them visible in figure \ref{fig:unfolding}, while Poisson-Likelihood unfolding yields comparable errors to the measured spectrum.
+            SVD unfolding gives almost negligable errors, so much so that it was necessary to magnify them hundredfold to make them visible in figure \ref{fig:unfolding}, while Poisson-Likelihood unfolding yields comparable errors to the measured spectrum.
             
             The measured data contained no event which was measured below $\SI{500}{\giga\electronvolt}$, although unfolding shows a not insignificant amount of events here.
             This can be explained with the energy sensitivity of FACT.
             The telescope is very likely insensitive for gamma-rays with energies below this threshold, which results in no measured events in this region.
         \subsection{Flux Calculation for Crab Nebula}
-            Comparing the flux calculated with FACT to the fits of MAGIC and HEGRA shows a clear overestimation for energies above $\SI{1}{\tera\electronvolt}$, with deviations up to more than one order of magnitude in the high end of the observed energies.
+            Comparing the flux calculated with FACT to the fits of MAGIC and HEGRA shows a clear underestimation for energies below $\SI{2}{\tera\electronvolt}$, with deviations up to more than one order of magnitude in the low end of the observed energies.
             The flux for the different methods of unfolding the energy spectrum show almost negligable difference, thus the discrepancy cannot be explained by this.
 
             Part of a more likely explaination is simply a lack of data.
             The data used in this experiment is from an observation time of only around $\SI{17.7}{\hour}$, whereas the data from HEGRA comes from almost $\SI{400}{\hour}$ of observation time and the MAGIC data from $\SI{69}{\hour}$.
-            The discrepancy in the results might be due to this, although the low bin count to maximize events per bin should alleviate statistical error due to low event counts.
+            The discrepancy in the results might be due to this, although the low bin count to maximize events per bin should alleviate statistical error due to low event counts and the clear bias in the deviation to lower flux makes this unlikely.
 
             Another possible explaination is the operating mode of this telescope.
             The FACT telescope is a single gamma-ray telescope, whereas the MAGIC and HEGRA telescopes work in stereoscopic mode, where two or more telescopes observe the same target simultaneously.
             HEGRA used 5 telescopes simultaneously, while MAGIC uses two.
             This operating mode not only improves direction measurement, but also offers background rejection since it is unlikely that multiple telescopes measure background radiation simultaneously.
+            It is possible that the chosen $\theta_\text{cut}$ resulted in signal getting cut from the data along with background, leading to loss of flux in the low energies where background is larger.
             
 
 \newpage
