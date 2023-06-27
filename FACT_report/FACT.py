@@ -145,7 +145,7 @@ err_f = np.sqrt(np.diag(min_l.hess_inv))
 A_tot = np.pi*270**2
 N_sel, _ = np.histogram(E_pred,bins_true[1:-1])
 N_sim = hist_E_true[1:-1]
-A_eff = N_sel/N_sim*0.7 * A_tot
+A_eff = N_sel/N_sim/0.7 * A_tot
 
 # Import observation time, sum
 t_obs = crab_runs["ontime"].to_numpy()
@@ -205,12 +205,12 @@ width_pred = np.diff(bins_E_pred)/2
 width_true = np.diff(bins_E_true)/2
 
 ax.stairs((signal+background)[:-1], bins_E_crab[:-1], color="r", linewidth=0.5, zorder=3 ,fill="True",alpha=0.1)
-ax.errorbar(x_pred, (signal+background), xerr=width_pred, yerr=np.sqrt(signal+background), fmt="none", ecolor="r", elinewidth=0.5, label=r"Measured Signal+Background")
-ax.errorbar(x_pred, background, xerr=width_pred, yerr=np.sqrt(background), fmt="none", ecolor="m", elinewidth=0.5, label=r"Measured Background")
-ax.errorbar(x_pred, signal, xerr=width_pred, yerr=np.sqrt(signal), fmt="none", ecolor="k", elinewidth=0.5, label=r"Measured Signal")
+ax.errorbar(x_pred, (signal+background), xerr=width_pred, yerr=np.sqrt(signal+background), fmt="none", ecolor="r", elinewidth=0.5, label=r"Measured total spectrum")
+ax.errorbar(x_pred, background, xerr=width_pred, yerr=np.sqrt(background), fmt="none", ecolor="m", elinewidth=0.5, label=r"Measured Background with $\theta^2_\text{cut} = \SI{0.025}{\degree\squared}$")
+ax.errorbar(x_pred, signal, xerr=width_pred, yerr=np.sqrt(signal), fmt="none", ecolor="k", elinewidth=0.5, label=r"Measured Signal with $\theta^2_\text{cut} = \SI{0.025}{\degree\squared}$")
 
 ax.stairs(f_crab[:-1], bins_E_true[:-1], color="g", linewidth=0.5, zorder=2,fill="True",alpha=0.1)
-ax.errorbar(x_true, f_crab, xerr=width_true, yerr=err_SVD*100, fmt="None", ecolor="g", elinewidth=0.7, label=r"SVD Unfolded (error magnified by 1000)")
+ax.errorbar(x_true, f_crab, xerr=width_true, yerr=err_SVD*100, fmt="None", ecolor="g", elinewidth=0.7, label=r"SVD Unfolded (error magnified by 100)")
 ax.stairs(f_like[:-1], bins_E_true[:-1], color="b", linewidth=0.5, zorder=1,fill="True",alpha=0.1)
 ax.errorbar(x_true, f_like, xerr=width_true, yerr=err_f, fmt="none", ecolor="b", elinewidth=0.7, label=r"Poisson-likelihood Unfolded")
 
